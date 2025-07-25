@@ -1,0 +1,23 @@
+# Build
+bin/
+obj/
+
+# User-specific
+.vscode/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# ASP.NET
+appsettings.Development.json
+appsettings.Production.json
+appsettings.*.json
+
+# Secrets
+secrets.json
+
+# System files
+Thumbs.db
+.DS_Store
