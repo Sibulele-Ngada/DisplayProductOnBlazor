@@ -16,6 +16,7 @@ using ProductDisplaySystem.Models;
         {
             var sql = @"
                 SELECT 
+                    p.Id,
                     p.Name, 
                     p.Price, 
                     c.Name AS CategoryName, 

@@ -36,7 +36,7 @@ else
                     <td>@product.CategoryName</td>
                     <td>@product.CategoryDescription</td>
                     <td>
-                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteProduct(product.Id)">
+                    <button class="btn btn-danger btn-sm" @onclick="async ()=> await DeleteProduct(product.Id)">
                         Delete
                     </button>
                 </td>
