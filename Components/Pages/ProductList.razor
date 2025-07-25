@@ -1,7 +1,8 @@
-@page "/productlist";
-@using ProductDisplaySystem.Models;
-@inject IProductRepository ProductRepository;
-@inject ICategoryRepository CategoryRepository;
+@page "/productlist"
+@rendermode InteractiveServer
+@using ProductDisplaySystem.Models
+@inject IProductRepository ProductRepository
+@inject ICategoryRepository CategoryRepository
 
 
 <PageTitle>Products</PageTitle>
@@ -34,6 +35,11 @@ else
                     <td>@product.Price.ToString("C")</td>
                     <td>@product.CategoryName</td>
                     <td>@product.CategoryDescription</td>
+                    <td>
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteProduct(product.Id)">
+                        Delete
+                    </button>
+                </td>
                 </tr>
             }
         </tbody>
@@ -44,29 +50,31 @@ else
 
 <h3>Add New Product</h3>
 
-<form @onsubmit="HandleValidSubmit" @onsubmit:preventDefault>
+<EditForm Model="newProduct" OnValidSubmit="HandleValidSubmit" FormName="NewProduct">
     <div class="mb-3">
         <label>Product Name</label>
-        <input type="text" @bind="newProduct.Name" class="form-control" />
+        <InputText @bind-Value="newProduct.Name" class="form-control" Name="newProduct.Name" />
+     
     </div>
+
     <div class="mb-3">
         <label>Price</label>
-        <input type="number" @bind="newProduct.Price" class="form-control" step="0.01" />
+        <InputNumber @bind-Value="newProduct.Price" class="form-control" step="0.01" Name="newProduct.Price" />
     </div>
+
     <div class="mb-3">
         <label>Category</label>
-        <select @bind="newProduct.CategoryId" class="form-control">
+        <InputSelect @bind-Value="newProduct.CategoryId" class="form-control" Name="newProduct.CategoryId">
             <option value="">-- Select Category --</option>
             @foreach (var cat in categories)
             {
                 <option value="@cat.Id">@cat.Name</option>
             }
-        </select>
+        </InputSelect>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
 
-<p>Selected CategoryId: @newProduct.CategoryId</p>
+    <button type="submit" class="btn btn-primary">Save</button>
+</EditForm>
 
 @code {
     private Product newProduct = new();
@@ -86,11 +94,17 @@ else
 
     private async Task HandleValidSubmit()
     {
-        Console.WriteLine($"Selected CategoryId: {newProduct.CategoryId}");
-
         await ProductRepository.AddAsync(newProduct);
         newProduct = new(); // clear form
         await LoadData();   // reload products
         StateHasChanged();  // update UI
     }
+
+    private async Task DeleteProduct(int productId)
+    {
+        await ProductRepository.DeleteAsync(productId);
+        await LoadData(); // refresh the list
+        StateHasChanged(); // update UI
+    }
+
 }
