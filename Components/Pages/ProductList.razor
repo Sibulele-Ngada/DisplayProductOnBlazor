@@ -1,0 +1,98 @@
+@page "/productlist"
+@using ProductDisplaySystem.Models
+@inject IProductRepository ProductRepository
+@inject ICategoryRepository CategoryRepository
+
+
+<PageTitle>Products</PageTitle>
+<h3>Product List with Categories</h3>
+
+@if (products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!products.Any())
+{
+    <p>No products found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Category Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price.ToString("C")</td>
+                    <td>@product.CategoryName</td>
+                    <td>@product.CategoryDescription</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<hr />
+
+<h3>Add New Product</h3>
+
+<form @onsubmit="HandleValidSubmit" @onsubmit:preventDefault>
+    <div class="mb-3">
+        <label>Product Name</label>
+        <input type="text" @bind="newProduct.Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Price</label>
+        <input type="number" @bind="newProduct.Price" class="form-control" step="0.01" />
+    </div>
+    <div class="mb-3">
+        <label>Category</label>
+        <select @bind="newProduct.CategoryId" class="form-control">
+            <option value="">-- Select Category --</option>
+            @foreach (var cat in categories)
+            {
+                <option value="@cat.Id">@cat.Name</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+
+newProduct = {56, "Hove", 9.99, 2};
+<button class="btn btn-primary" @onclick="HandleValidSubmit">Test</button>
+
+@code {
+    private Product newProduct = new();
+    private List<ProductWithCategory> products = new();
+    private List<Category> categories = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        products = (await ProductRepository.GetAllWithCategoryAsync()).ToList();
+        categories = (await CategoryRepository.GetAllAsync()).ToList();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        Console.WriteLine($"Selected CategoryId: {newProduct.CategoryId}");
+
+        await ProductRepository.AddAsync(newProduct);
+        newProduct = new(); // clear form
+        await LoadData();   // reload products
+        StateHasChanged();  // update UI
+    }
+}
