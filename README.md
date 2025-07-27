@@ -8,7 +8,7 @@ This is a simple Blazor Server app built using:
 - SQL Server
 - Repository Pattern
 
-It displays a list of products and their categories, with the ability to add (and soon delete) entries.
+It displays a list of products and their categories, with the ability to add and delete entries.
 
 ---
 
@@ -34,3 +34,13 @@ Make sure you have the following installed:
 
 - Open CLI and navigate to project folder
 - Type 'dotnet run' and hit enter to launch server and view webapp
+
+## What I learned
+
+- The entire tech stack is new to me. I've learned a new language along with the frameworks that it's used with.
+- I learned how to build in .NET environment
+- I learned how to implement repository pattern, (working on mediator pattern next)
+
+  ## What was hardest
+
+  - Definitely figuring out the library. Whilst I'm new to c# it isn't much different from Java, ruunning SQL queries I found went smoothly, but knowing what I wanted to do and figuring out how/where to do it took most of my time
